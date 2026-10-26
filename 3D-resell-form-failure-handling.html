@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3D.resell.com — 3D Print Models & Ideas</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg: #0a0e17;
+      --card: #121826;
+      --border: #1e2a3a;
+      --text: #e8f0fe;
+      --muted: #8b9bb4;
+      --accent: #00e5ff;
+      --accent2: #7c4dff;
+      --price: #00e676;
+      --hover: #1a2332;
+      --danger: #ff5252;
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      min-height: 100vh;
+    }
+
+    /* Header */
+    header {
+      background: rgba(10, 14, 23, 0.95);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(12px);
+    }
+
+    .header-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .logo {
+      font-size: 1.35rem;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      white-space: nowrap;
+    }
+
+    .logo span {
+      color: var(--accent);
+    }
+
+    .search-wrap {
+      flex: 1;
+      min-width: 200px;
+      position: relative;
+    }
+
+    .search-wrap input {
+      width: 100%;
+      padding: 10px 16px 10px 42px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text);
+      font-size: 0.95rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .search-wrap input:focus {
+      border-color: var(--accent);
+    }
+
+    .search-wrap input::placeholder {
+      color: var(--muted);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted);
+      font-size: 1rem;
+      pointer-events: none;
+    }
+
+    /* Hero */
+    .hero {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 48px 20px 32px;
+      text-align: center;
+    }
+
+    .hero h1 {
+      font-size: clamp(1.6rem, 4vw, 2.4rem);
+      font-weight: 700;
+      margin-bottom: 12px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero p {
+      color: var(--muted);
+      font-size: 1.05rem;
+      max-width: 520px;
+      margin: 0 auto;
+    }
+
+    /* Sections */
+    .section {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 24px 20px 40px;
+    }
+
+    .section-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .section-title::before {
+      content: '';
+      width: 4px;
+      height: 20px;
+      background: var(--accent);
+      border-radius: 2px;
+    }
+
+    /* Product Grid */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 16px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px;
+      transition: border-color 0.2s, transform 0.15s;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+
+    .card.hidden {
+      display: none;
+    }
+
+    .card-icon {
+      font-size: 2rem;
+      margin-bottom: 12px;
+    }
+
+    .card h3 {
+      font-size: 1.05rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .card p {
+      color: var(--muted);
+      font-size: 0.88rem;
+      flex: 1;
+      margin-bottom: 14px;
+    }
+
+    .card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .price {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--price);
+    }
+
+    .btn {
+      background: linear-gradient(135deg, var(--accent), #00b8d4);
+      color: #0a0e17;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.1s;
+    }
+
+    .btn:hover {
+      opacity: 0.9;
+    }
+
+    .btn:active {
+      transform: scale(0.97);
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .btn.secondary {
+      background: transparent;
+      border: 1px solid var(--accent2);
+      color: var(--accent2);
+    }
+
+    .btn.secondary:hover {
+      background: rgba(124, 77, 255, 0.15);
+      opacity: 1;
+    }
+
+    .btn.full {
+      width: 100%;
+      padding: 12px;
+      font-size: 1rem;
+      margin-top: 8px;
+    }
+
+    /* Suggestions */
+    .suggestions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .tag {
+      background: var(--card);
+      border: 1px solid var(--border);
+      padding: 8px 14px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      color: var(--muted);
+      transition: border-color 0.2s, color 0.2s;
+      cursor: default;
+    }
+
+    .tag:hover {
+      border-color: var(--accent2);
+      color: var(--text);
+    }
+
+    /* Spreadsheet highlight */
+    .featured {
+      background: linear-gradient(135deg, rgba(0, 229, 255, 0.08), rgba(124, 77, 255, 0.08));
+      border: 1px solid rgba(0, 229, 255, 0.3);
+    }
+
+    /* Empty state */
+    .empty {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--muted);
+      display: none;
+    }
+
+    .empty.show {
+      display: block;
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 28px 20px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    /* ========== CHECKOUT MODAL ========== */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.75);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 300;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.25s, visibility 0.25s;
+      padding: 20px;
+    }
+
+    .modal-overlay.open {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      width: 100%;
+      max-width: 400px;
+      padding: 28px 24px;
+      transform: translateY(20px);
+      transition: transform 0.25s;
+    }
+
+    .modal-overlay.open .modal {
+      transform: translateY(0);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .modal-header h2 {
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+
+    .modal-close {
+      background: none;
+      border: none;
+      color: var(--muted);
+      font-size: 1.5rem;
+      cursor: pointer;
+      line-height: 1;
+      padding: 4px;
+    }
+
+    .modal-close:hover {
+      color: var(--text);
+    }
+
+    .order-summary {
+      background: var(--bg);
+      border-radius: 10px;
+      padding: 14px 16px;
+      margin-bottom: 20px;
+      border: 1px solid var(--border);
+    }
+
+    .order-summary .item-name {
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .order-summary .item-price {
+      color: var(--price);
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 12px 14px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text);
+      font-size: 1rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .form-group input:focus {
+      border-color: var(--accent);
+    }
+
+    .form-group input.error {
+      border-color: var(--danger);
+    }
+
+    .error-msg {
+      color: var(--danger);
+      font-size: 0.85rem;
+      margin-top: 6px;
+      display: none;
+    }
+
+    .error-msg.show {
+      display: block;
+    }
+
+    .success-box {
+      text-align: center;
+      padding: 10px 0;
+      display: none;
+    }
+
+    .success-box.show {
+      display: block;
+    }
+
+    .success-box .check {
+      font-size: 3rem;
+      margin-bottom: 12px;
+    }
+
+    .success-box h3 {
+      font-size: 1.2rem;
+      margin-bottom: 8px;
+    }
+
+    .success-box p {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .form-area {
+      display: block;
+    }
+
+    .form-area.hide {
+      display: none;
+    }
+
+    @media (max-width: 600px) {
+      .header-inner {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .logo {
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-inner">
+      <div class="logo">3D<span>.resell</span>.com</div>
+      <div class="search-wrap">
+        <span class="search-icon">⌕</span>
+        <input type="text" id="search" placeholder="Search 3D prints..." autocomplete="off">
+      </div>
+    </div>
+  </header>
+
+  <section class="hero">
+    <h1>3D Models People Actually Want</h1>
+    <p>Ready-to-print files, popular fidgets, dragons & more. Simple prices. Instant digital delivery.</p>
+  </section>
+
+  <section class="section">
+    <h2 class="section-title">Popular Models</h2>
+    <div class="grid" id="product-grid">
+
+      <div class="card" data-name="gravity knife">
+        <div class="card-icon">🔪</div>
+        <h3>Gravity Knife</h3>
+        <p>Print-in-place fidget gravity knife. Satisfying slide action. No supports needed on most printers.</p>
+        <div class="card-footer">
+          <span class="price">$4</span>
+          <button class="btn" onclick="openCheckout('Gravity Knife', 4)">Buy</button>
+        </div>
+      </div>
+
+      <div class="card" data-name="clicker">
+        <div class="card-icon">🖱️</div>
+        <h3>Clicker</h3>
+        <p>Mechanical clicker fidget. Crisp tactile feedback. Great desk toy and stress relief.</p>
+        <div class="card-footer">
+          <span class="price">$5</span>
+          <button class="btn" onclick="openCheckout('Clicker', 5)">Buy</button>
+        </div>
+      </div>
+
+      <div class="card" data-name="infinity cube">
+        <div class="card-icon">🧊</div>
+        <h3>Infinity Cube</h3>
+        <p>Classic foldable infinity cube. Prints assembled. Endless flipping motion.</p>
+        <div class="card-footer">
+          <span class="price">$4</span>
+          <button class="btn" onclick="openCheckout('Infinity Cube', 4)">Buy</button>
+        </div>
+      </div>
+
+      <div class="card" data-name="benchy boat">
+        <div class="card-icon">🚤</div>
+        <h3>Benchy (Boat)</h3>
+        <p>The legendary 3DBenchy calibration boat. Perfect first print or stress test for your printer.</p>
+        <div class="card-footer">
+          <span class="price">$2</span>
+          <button class="btn" onclick="openCheckout('Benchy (Boat)', 2)">Buy</button>
+        </div>
+      </div>
+
+      <div class="card" data-name="dragons">
+        <div class="card-icon">🐉</div>
+        <h3>Dragons</h3>
+        <p>Articulated flexi dragons. Print-in-place, no assembly. Multiple styles available.</p>
+        <div class="card-footer">
+          <span class="price">$7</span>
+          <button class="btn" onclick="openCheckout('Dragons', 7)">Buy</button>
+        </div>
+      </div>
+
+      <div class="card" data-name="rubber band gun">
+        <div class="card-icon">🔫</div>
+        <h3>Rubber Band Gun</h3>
+        <p>Fun mechanical rubber band shooter. Easy assembly, reliable firing action.</p>
+        <div class="card-footer">
+          <span class="price">$6</span>
+          <button class="btn" onclick="openCheckout('Rubber Band Gun', 6)">Buy</button>
+        </div>
+      </div>
+
+    </div>
+    <div class="empty" id="empty-state">No models match your search. Try another keyword.</div>
+  </section>
+
+  <section class="section" style="text-align: center; padding-top: 8px;">
+    <button class="btn secondary" onclick="openSuggest()" style="padding: 12px 24px; font-size: 1rem;">
+      + Suggest a model
+    </button>
+    <p style="color: var(--muted); font-size: 0.85rem; margin-top: 10px;">
+      Got an idea for a new 3D print we should sell? Tell us!
+    </p>
+  </section>
+
+  <footer>
+    <p><strong>3D.resell.com</strong> — Simple 3D model reselling</p>
+    <p style="margin-top: 6px;">Digital files only · Instant delivery after payment confirmation</p>
+  </footer>
+
+  <!-- CHECKOUT MODAL -->
+  <div class="modal-overlay" id="checkout-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>Complete Order</h2>
+        <button class="modal-close" onclick="closeCheckout()" aria-label="Close">&times;</button>
+      </div>
+
+      <!-- Form area -->
+      <div class="form-area" id="form-area">
+        <div class="order-summary">
+          <div class="item-name" id="modal-item-name">Product</div>
+          <div class="item-price" id="modal-item-price">$0</div>
+        </div>
+
+        <!-- Orders go to d18080960534@gmail.com via FormSubmit -->
+        <form id="order-form" action="https://formsubmit.co/d18080960534@gmail.com" method="POST" target="_blank">
+          <input type="hidden" name="product" id="form-product">
+          <input type="hidden" name="price" id="form-price">
+          <input type="hidden" name="_subject" value="New order from 3D.resell.com">
+          <input type="hidden" name="_captcha" value="false">
+          <input type="hidden" name="_template" value="table">
+          <input type="hidden" name="_next" value="https://formsubmit.co/thank-you-page">
+
+          <div class="form-group">
+            <label for="customer-email">Your email (we'll send the files here)</label>
+            <input type="email" id="customer-email" name="email" placeholder="you@example.com" required>
+            <div class="error-msg" id="email-error">Please enter a valid email</div>
+          </div>
+
+          <div class="form-group">
+            <label for="customer-name">Name (optional)</label>
+            <input type="text" id="customer-name" name="name" placeholder="Your name">
+          </div>
+
+          <button type="submit" class="btn full" id="submit-btn">Place Order</button>
+        </form>
+      </div>
+
+      <!-- Success message -->
+      <div class="success-box" id="success-box">
+        <div class="check">✅</div>
+        <h3>Order received!</h3>
+        <p>Check your email soon — we'll send the files to the address you provided.</p>
+        <button class="btn full" style="margin-top: 20px;" onclick="backToMenu()">Back to menu</button>
+      </div>
+
+      <!-- Failure message -->
+      <div class="success-box" id="failure-box">
+        <div class="check">❌</div>
+        <h3>Order failed</h3>
+        <p id="failure-message">We couldn't submit your order. Please try again.</p>
+        <button class="btn full" style="margin-top: 20px;" onclick="retryOrder()">Try again</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUGGEST MODAL -->
+  <div class="modal-overlay" id="suggest-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>Suggest a Model</h2>
+        <button class="modal-close" onclick="closeSuggest()" aria-label="Close">&times;</button>
+      </div>
+
+      <div class="form-area" id="suggest-form-area">
+        <p style="color: var(--muted); font-size: 0.9rem; margin-bottom: 16px;">
+          Tell us what 3D model you'd like to see on the site.
+        </p>
+
+        <form id="suggest-form" action="https://formsubmit.co/d18080960534@gmail.com" method="POST" target="_blank">
+          <input type="hidden" name="_subject" value="New model suggestion from 3D.resell.com">
+          <input type="hidden" name="_captcha" value="false">
+          <input type="hidden" name="_template" value="table">
+          <input type="hidden" name="_next" value="https://formsubmit.co/thank-you-page">
+
+          <div class="form-group">
+            <label for="suggestion-text">Your suggestion</label>
+            <input type="text" id="suggestion-text" name="suggestion" placeholder="e.g. Articulated octopus, phone stand..." required>
+          </div>
+
+          <div class="form-group">
+            <label for="suggest-email">Your email (optional)</label>
+            <input type="email" id="suggest-email" name="email" placeholder="you@example.com">
+          </div>
+
+          <button type="submit" class="btn full" id="suggest-submit-btn">Send Suggestion</button>
+        </form>
+      </div>
+
+      <div class="success-box" id="suggest-success">
+        <div class="check">✅</div>
+        <h3>Thanks for the idea!</h3>
+        <p>We'll check it out and maybe add it to the site.</p>
+        <button class="btn full" style="margin-top: 20px;" onclick="closeSuggest()">Back to menu</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ========== SEARCH ==========
+    const searchInput = document.getElementById('search');
+    const cards = document.querySelectorAll('.card');
+    const emptyState = document.getElementById('empty-state');
+
+    searchInput.addEventListener('input', () => {
+      const q = searchInput.value.trim().toLowerCase();
+      let visible = 0;
+
+      cards.forEach(card => {
+        const name = card.dataset.name || '';
+        const match = name.includes(q) || card.querySelector('h3').textContent.toLowerCase().includes(q);
+        card.classList.toggle('hidden', !match);
+        if (match) visible++;
+      });
+
+      emptyState.classList.toggle('show', visible === 0);
+    });
+
+    // ========== CHECKOUT ==========
+    const modal = document.getElementById('checkout-modal');
+    const formArea = document.getElementById('form-area');
+    const successBox = document.getElementById('success-box');
+    const failureBox = document.getElementById('failure-box');
+    const failureMessage = document.getElementById('failure-message');
+    const orderForm = document.getElementById('order-form');
+    const emailInput = document.getElementById('customer-email');
+    const emailError = document.getElementById('email-error');
+    const submitBtn = document.getElementById('submit-btn');
+
+    function openCheckout(name, price) {
+      document.getElementById('modal-item-name').textContent = name;
+      document.getElementById('modal-item-price').textContent = '$' + price;
+      document.getElementById('form-product').value = name;
+      document.getElementById('form-price').value = '$' + price;
+
+      // Reset form state
+      formArea.classList.remove('hide');
+      successBox.classList.remove('show');
+      failureBox.classList.remove('show');
+      orderForm.reset();
+      emailInput.classList.remove('error');
+      emailError.classList.remove('show');
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Place Order';
+
+      modal.classList.add('open');
+      setTimeout(() => emailInput.focus(), 100);
+    }
+
+    function closeCheckout() {
+      modal.classList.remove('open');
+    }
+
+    function backToMenu() {
+      modal.classList.remove('open');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Close on overlay click
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) closeCheckout();
+    });
+
+    // Close on Escape
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeCheckout();
+    });
+
+    // Submit via FormSubmit's AJAX response so success is only shown when accepted.
+    orderForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = emailInput.value.trim();
+      if (!email || !email.includes('@') || !email.includes('.')) {
+        emailInput.classList.add('error');
+        emailError.classList.add('show');
+        return;
+      }
+
+      emailInput.classList.remove('error');
+      emailError.classList.remove('show');
+      failureBox.classList.remove('show');
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Sending...';
+
+      try {
+        const response = await fetch(orderForm.action, {
+          method: 'POST',
+          body: new FormData(orderForm),
+          headers: { 'Accept': 'application/json' }
+        });
+        let result = {};
+        try { result = await response.json(); } catch (_) {}
+
+        if (!response.ok || result.success === 'false' || result.success === false) {
+          throw new Error(result.message || 'FormSubmit could not accept your order. Please try again.');
+        }
+
+        formArea.classList.add('hide');
+        successBox.classList.add('show');
+      } catch (error) {
+        failureMessage.textContent = error.message || 'We could not send your order. Check your connection and try again.';
+        formArea.classList.add('hide');
+        failureBox.classList.add('show');
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Place Order';
+      }
+    });
+
+    function retryOrder() {
+      failureBox.classList.remove('show');
+      formArea.classList.remove('hide');
+    }
+
+    // ========== SUGGEST ==========
+    const suggestModal = document.getElementById('suggest-modal');
+    const suggestForm = document.getElementById('suggest-form');
+    const suggestFormArea = document.getElementById('suggest-form-area');
+    const suggestSuccess = document.getElementById('suggest-success');
+    const suggestSubmitBtn = document.getElementById('suggest-submit-btn');
+
+    function openSuggest() {
+      suggestFormArea.classList.remove('hide');
+      suggestSuccess.classList.remove('show');
+      suggestForm.reset();
+      suggestSubmitBtn.disabled = false;
+      suggestSubmitBtn.textContent = 'Send Suggestion';
+      suggestModal.classList.add('open');
+      setTimeout(() => document.getElementById('suggestion-text').focus(), 100);
+    }
+
+    function closeSuggest() {
+      suggestModal.classList.remove('open');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    suggestModal.addEventListener('click', (e) => {
+      if (e.target === suggestModal) closeSuggest();
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeCheckout();
+        closeSuggest();
+      }
+    });
+
+    suggestForm.addEventListener('submit', () => {
+      const text = document.getElementById('suggestion-text').value.trim();
+      if (!text) return;
+
+      suggestSubmitBtn.disabled = true;
+      suggestSubmitBtn.textContent = 'Sending...';
+
+      setTimeout(() => {
+        suggestFormArea.classList.add('hide');
+        suggestSuccess.classList.add('show');
+        suggestSubmitBtn.disabled = false;
+        suggestSubmitBtn.textContent = 'Send Suggestion';
+      }, 800);
+    });
+  </script>
+</body>
+</html>
